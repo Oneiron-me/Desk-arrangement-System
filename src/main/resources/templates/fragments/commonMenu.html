@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+	<div th:fragment="commonMenu">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark menu">
+			<a class="navbar-brand" href="/intro/home">Chori</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarColor02" aria-controls="navbarColor02"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		
+			<div class="collapse navbar-collapse" id="navbarColor02">
+				<ul class="navbar-nav mr-auto">
+ 					<li class="nav-item" th:classappend='${#httpServletRequest.getRequestURI().contains("intro")} ? active : null'>
+						<a class="nav-link" href="/intro/home">Home
+							<span class="sr-only">(current)</span>
+						</a>
+					</li>
+					<li class="nav-item dropdown" th:classappend='${#httpServletRequest.getRequestURI().contains("about")} ? active : null'>
+					    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">About</a>
+					    <div class="dropdown-menu" style="">
+					      <a class="dropdown-item" th:classappend='${#httpServletRequest.getRequestURI().contains("profile")} ? active : null' href="/about/profile">PROFILE</a>
+					      <div class="dropdown-divider"></div>
+					      <a class="dropdown-item" th:classappend='${#httpServletRequest.getRequestURI().contains("projects")} ? active : null' href="/about/projects">PROJECTS</a>
+					    </div>
+					  </li>
+				</ul>
+				<span style="margin-right:30px; color:white;" th:text="|현재 로그인 :  ${session.userInfo.name}|"></span>
+				<a class="logout" id="btnLogout">LOG OUT</a>
+				<div th:if="${session.userInfo.id.equals('properties@kakao.com')}">
+					<form class="form-inline my-2 my-lg-0">
+						<button class="btn btn-danger my-2 my-sm-0" style="margin-left:20px;" type="button" id="btnAdmin">ADMIN</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+	</div>
+</html>

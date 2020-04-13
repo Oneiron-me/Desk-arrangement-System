@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/defaultLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Intro</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-4 mx-auto">
+          	<h1>DESK LIST</h1>
+			<div class="slider" id="bxSlider">
+				<div class="card text-white bg-success mb-3 slide-item" style="width: 594px; height:250px; display:inline-block;">
+					<div class="card-header">New</div>
+					<div class="card-body" style="text-align: center;">
+						<button type="button" id="btnAddIcon" class="btn" style=" cursor:pointer; outline:0;">
+							<i class="fas fa-plus fa-5x" style="color:white;"></i>
+						</button>
+						<br>
+						<h4 class="card-title">ADD</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="popup" class="pop_style h-50">
+			<span class="float-right" style="cursor:pointer;"><i id="btnClose" class="far fa-window-close b-close fa-3x"></i></span>
+			<div class="container h-100">
+			    <div class="row align-items-center h-100">
+			        <div class="col-12 mx-auto">
+			            <div class="jumbotron" style="background:white; padding:0;">
+			            	<form id="frmDeskInfo">
+				            	<div class="form-group">
+									<label class="col-form-label" for="noteName">Desk Name</label>
+									<!-- is-vaild, is-invalid -->
+									<input type="text" class="form-control" placeholder="DESK NAME" id="deskName" name="deskName">
+									<!-- valid-feedback invalid-feedback -->
+									<div id="vaildMent" class="invalid-feedback"></div>
+									<hr/>
+									<label for="comments">Comments</label>
+									<textarea class="form-control" id="comments" name="comments" rows="5" style="resize: none;" placeholder="INPUT COMMENTS"></textarea>
+									<button type="button" id="btnAddNote" style="font-size:16px;" class="btn btn-success mt-20 float-right animeBtn-2 btn-4">ADD</button>
+								</div>
+			            	</form>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+		    
+		    var $bPopup = $('#popup');
+		    
+		    var $bxSlider = $('#bxSlider');
+		    
+		    $(document).ready(function(){
+		    	//bx-slider 안의 내용물의 길이가 2미만일땐 터치 스와이프 막음~!
+		    
+		    	getDeskList();
+		    	
+		    });
+		    
+		    //desk List 가져옴
+		    function getDeskList(){
+				return ajaxJsonParam("/intro/getDeskList", null).then(function(data){
+					
+					if(!!data){
+		    			viewDeskList("bxSlider", data);
+					}
+	    			
+					$bxSlider.bxSlider({
+				    	touchEnabled : false,
+						//"touchEnabled" : document.querySelectorAll(".slide-item").length < 2 ? false : true,
+						"onSliderLoad" : function(){
+							$(".bx-default-pager").css("display","none");
+						}
+					});
+	    		});
+		    }
+		    
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>
+</body>
+</html>

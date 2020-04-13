@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/deniedLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Thymeleaf 예제</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-4 mx-auto">
+		<p align="center">
+			<img src="/static/img/notAccess.jpg"/>
+          	<h1 class="noTouch">촉수 엄금</h1>
+		</p>
+		</div>		
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.js}"></script> -->
+	    <script>
+	    
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>
+</body>
+</html>

@@ -1,0 +1,248 @@
+@charset "UTF-8";
+
+body {
+	height:100vh;
+	min-height:100vh;
+	-ms-user-select: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;
+}
+
+textarea {
+	resize : none !important;
+}
+
+.datepicker {
+    padding-top: 0.75rem !important;
+    padding-right: 1.5rem !important;
+    padding-bottom: 0.75rem !important;
+    padding-left: 1.5rem !important;
+}
+
+.menu {
+	/* height: 10vh; */
+}
+.footer {
+	height:5vh;
+	background:#919aa1;
+	color:fff !important;
+}
+
+.noTouch {
+	color:red;
+	font-size:100px;
+	font-family: 궁서체;
+	text-align: center;
+}
+
+.logout {
+	font-size:20px;
+	color:white !important;
+	cursor:pointer;
+}
+
+.btnNotFocus:focus {
+	outline: none !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.bs-component {
+	-ms-overflow-style:none;
+	scrollbar-width:none;
+}
+
+.bs-component::-webkit-scrollbar {
+	display:none;
+}
+
+.wd100p{
+	width:100% !important;
+}
+
+.h-90 {
+	height:90% !important;
+}
+
+.h-85 {
+	height:85% !important;
+}
+
+.h-10 {
+	height:10% !important;
+}
+
+.pa20 {
+	padding:20px;
+}
+
+.pop_style {
+	background:white;
+	padding : 20px;
+	border-radius: 20px;
+	width: 50%;
+	display:none;
+	min-height:430px;
+}
+
+.fade-in-out {
+	transition:0.1s linear all;
+}
+
+.mt-10 {
+	margin-top:10px;
+}
+
+.mt-20 {
+	margin-top:20px;
+}
+
+.ml-10 {
+	margin-left:10px;
+}
+
+.ml-20 {
+	margin-left:20px;
+}
+
+.mb-10 {
+	margin-bottom:10px;
+}
+
+.mb-20 {
+	margin-bottom:20px;
+}
+
+.mt-2p {
+	margin-top:2%;
+}
+
+.mt-5p {
+	margin-top:5%;
+}
+
+.mt-10p {
+	margin-top:10%;
+}
+
+.font-size-10 {
+	font-size:10px;
+}
+.font-size-20 {
+	font-size:20px;
+}
+.font-size-30 {
+	font-size:30px;
+}
+
+.desk-createTime {
+	font-size:16px;
+	font-weight:bold;
+	margin-top:-20px;
+	text-align:right;
+}
+
+.desk-userName {
+	font-size:16px;
+	font-weight:bold;
+	margin-bottom:-20px;
+}
+
+.desk-textArea {
+	height:auto !important;
+	margin:20px;
+	background:transparent !important;
+	overflow:hidden;
+}
+
+.desk-btn {
+	width:100%;
+	height:100%;
+	background-color:#179692 !important;
+	border-radius: 1em !important;
+	color:white !important;
+}
+
+/* 사이트 들가면 커스텀으로 만들수있씀 https://www.ilikepixels.co.uk/bubbler/ */
+.bubble-me
+{
+	margin : 20px;
+	position: relative;
+	width: 100%;
+	min-height: 120px;
+	padding: 0px;
+	background: #d6e6f0;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: #3B3B3B solid 5px;
+}
+
+.bubble-me:after
+{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 15px 0 15px 15px;
+	border-color: transparent #d6e6f0;
+	display: block;
+	width: 0;
+	z-index: 1;
+	right: -15px;
+	top: 45px;
+}
+
+.bubble-me:before
+{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 19px 0 19px 19px;
+	border-color: transparent #3B3B3B;
+	display: block;
+	width: 0;
+	z-index: 0;
+	right: -24px;
+	top: 41px;
+}
+
+.bubble-you
+{
+	margin: 20px;
+	position: relative;
+	width: 100%;
+	min-height: 120px;
+	padding: 0px;
+	background: #FFFFFF;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: #3B3B3B solid 5px;
+}
+
+.bubble-you:after
+{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 15px 15px 15px 0;
+	border-color: transparent #FFFFFF;
+	display: block;
+	width: 0;
+	z-index: 1;
+	left: -15px;
+	top: 45px;
+}
+
+.bubble-you:before
+{
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 19px 19px 19px 0;
+	border-color: transparent #3B3B3B;
+	display: block;
+	width: 0;
+	z-index: 0;
+	left: -24px;
+	top: 41px;
+}

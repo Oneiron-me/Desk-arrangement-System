@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+	<script th:fragment="commonScript" type="text/javascript" th:inline="javascript">
+
+	/*<![CDATA[*/
+		var authority = [[ ${session.SPRING_SECURITY_CONTEXT.authentication.authorities}]];
+	/*]]>*/
+	
+		if(getEl("btnAdmin") != null){
+			getEl("btnAdmin").event("click", function() {
+				if(confirm("당신은 관리자입니까?")){
+					for(var author in authority){
+						if(authority[author].authority != "ADMIN"){
+							alert("거짓말치지 마세요.");
+							return false;
+						} else {
+							location.href = "/admin/home";
+						}
+					}
+				}
+			});
+		}
+
+		getEl("btnLogout").event("click", function(){
+			if(confirm("로그아웃 하시겠습니까?")){
+				location.href = "/logout";
+			}
+		});
+	</script>
+</html>

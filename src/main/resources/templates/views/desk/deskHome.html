@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/adminLayout">
+<head>
+    <title>DESK</title>
+    <th:block layout:fragment="pageScriptImport">
+    	<script type="text/javascript" th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.js}"></script>
+    	<script>
+    	//비정상적으로 들어오면 뒤로보냄
+   		if(!"[[${session.lastDeskId}]]")
+   			history.back();
+    	</script>
+	</th:block>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-10 mx-auto mt-2p h-98">
+			<div class="row">
+				<div class="col float-left">
+					<h1>SHARED MEMO DESK <button id="btnInviteOtherHuman" class="btn btn-outline-success" type="button">초대하기</button></h1>
+				</div>
+				<div class="row float-right">
+				</div>
+			</div>
+			<div class="row">
+		        <div class="col-md-6" style="display:none;">
+		            <form class="form-inline">
+		                <div class="form-group">
+		                    <label for="connect">WebSocket connection:</label>
+		                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+		                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+		                    </button>
+		                </div>
+		            </form>
+		        </div>
+		        <div class="row w-100" style="height:100px;">
+		        	<div class="col-2"></div>
+		        	<div class="col-8">
+						<div class="row form-group">
+							<div class="col-10">
+								<textarea class="form-control" id="noteMsg" rows="4" placeholder="입력해보세요~!"></textarea>
+							</div>
+							<div class="col-2">
+								<button id="send" class="btn btn-default desk-btn" type="button">Send</button>
+							</div>
+						</div>
+		        	</div>
+		        	<div class="col-2"></div>
+		        </div>
+		    </div>
+			<div class="bs-component mt-2p h-98" style="max-height:600px !important; overflow:auto;">
+				<div id="main-content" class="container">
+				    <div class="row">
+				    	<div id="desk" class="col-md-12" th:if="${noteList} == null"></div>
+				        <div id="desk" class="col-md-12" th:if="${noteList} != null" th:each="note : ${noteList}">
+				        	<div class="row">
+				        		<div class="col-10 desk-userName" th:if="${!note.userId.toString().equals(session.userInfo.id)}" th:text="${note.userName}">상대방</div>
+				        		<div class="col-10" th:classappend='${note.userId.toString().equals(session.userInfo.id)} ? bubble-me : bubble-you'>
+				        			<textarea class="form-control w-100 desk-textArea" th:utext="${note.message}" disabled>바보</textarea>
+					        	</div>
+					        	<div class="col-10 desk-createTime" th:text="${note.createTime}">2019-05-03 22:22:22</div>
+					        	<input type="text" style="display:none;" th:value="${note.noteId}"/>
+				        	</div>
+				        </div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	<th:block layout:fragment="pageCustomScript">
+	   <script>
+	   		var deskId = "[[${session.lastDeskId}]]";
+	   		var uId = "[[${session.userInfo.id}]]";
+	   		var uName = "[[${session.userInfo.name}]]";
+	   		
+	   		var desk = document.getElementById("desk");
+	   		
+			var stompClient = null;
+			
+			window.onload = function(){
+				textAreaAutoSize(document.querySelectorAll(".desk-textArea"));
+				connect();
+				
+			    $( "#connect" ).click(function() { connect();});
+			    $( "#disconnect" ).click(function() { disconnect(); });
+			    
+			    getEl("send").event("click", function(e){
+			    	sendMsg();
+			    });
+			    
+			    getEl("btnInviteOtherHuman").event("click", function(e){
+			    	alert("구현중입니다 ㅠ");
+			    });
+			    
+// 				ajaxJsonParam("/desk/getNoteList", {"deskId" : deskId}).then(function(data){
+// 					textAreaAutoSize(document.querySelectorAll("textArea"));
+// 					connect();
+					
+// 				});
+				
+			};
+			
+			function setConnected(connected) {
+			    $("#connect").prop("disabled", connected);
+			    $("#disconnect").prop("disabled", !connected);
+			    if (connected) {
+			        $("#conversation").show();
+			    }
+			    else {
+			        $("#conversation").hide();
+			    }
+			    $("#greetings").html("");
+			}
+			
+			//���ʿ���
+			function connect() {
+			    var socket = new SockJS('/oneIronWS');
+			    stompClient = Stomp.over(socket);
+			    stompClient.connect({"uId" : uId, "uName" : uName}, function (frame) {
+			        setConnected(true);
+			        if(!!frame){
+// 			        	$.when(
+// 			        		ajaxJsonParam("/desk/getSessionCount", {"uId" : uId, "status" : "connected"}),
+// 			        		ajaxJsonParam("/desk/getSessionList", {"uId" : uId, "status" : "connected"})
+// 			        	).then(function(data1, data2){
+			        		
+// 			        		getEl("pid").innerHTML = "";
+// 			        		getEl("pid2").innerHTML = "";
+			        		
+// 			        		getEl("pid").innerHTML = "현재 접속자 : " + JSON.stringify(data1[0]) + " 명";
+			        		
+// 			        		for(var s in data2[0]){
+// 				        		getEl("pid2").innerHTML += data2[0][s] + "\n";
+// 			        		}
+			        		
+// 			        	});
+			        }
+			        
+			        //�����ߴٰ� ����
+// 			        userConnect(stompClient);
+			        
+			        //�̰� �޽��� ����
+			        stompClient.subscribe('/topic/responseNote/'+deskId, function (result) {
+			        	
+			        	var obj = JSON.parse(result.body);
+			            showNote(obj);
+			        });
+			         
+			        //�̰� �����ڰ��� ����
+// 			         stompClient.subscribe('/topic/connect/'+deskId, function (connected) {
+			        	
+// 			        	var result = JSON.parse(JSON.parse(connected.body).content);
+			        	
+// 			        	showUserList(result);
+// 			         	console.log("바보",result);
+// 			        });
+			    });
+			}
+			
+			//������ �پ��ٰ� connector�� ����
+// 			function userConnect(stompClient) {
+// 				console.log(stompClient);
+// 				stompClient.send("/app/connect/"+deskId, {}, JSON.stringify({'status': "connected"}));
+// 			}
+			
+			//���� ��������
+			function disconnect() {
+				
+				//stompClient ��ü�� null�� �ƴҶ� connector�� �����ٰ� �˸��鼭 stompclient �������
+// 			    if (stompClient !== null) {
+// 			    	stompClient.send("/app/connect/"+deskId, {}, JSON.stringify({'status': "disconnected"}));
+// 			        stompClient.disconnect();
+// 			    }
+			    setConnected(false);
+			    
+// 			    $.when(
+// 		       		ajaxJsonParam("/desk/getSessionCount", {"uId" : uId, "status" : "disconnected"}),
+// 		       		ajaxJsonParam("/desk/getSessionList", {"uId" : uId, "status" : "disconnected"})
+// 		       	).then(function(data1, data2){
+// 		       		getEl("pid").innerHTML = "";
+// 		    		getEl("pid2").innerHTML = "";
+		       		
+// 		       		getEl("pid").innerHTML =  "현재 접속자 : " + JSON.stringify(data1[0]) + " 명";
+		       		
+// 		       		for(var s in data2[0]){
+// 		       			getEl("pid2").innerHTML = "";
+		       			
+// 		        		getEl("pid2").innerHTML += data2[0][s] + "\n";
+// 		       		}
+		       		
+// 		       	});
+			}
+			
+			function sendMsg() {
+				var noteMsg = getEl("noteMsg");
+			    stompClient.send("/send/write/"+deskId, {}, JSON.stringify({'message': noteMsg.value}));
+			    noteMsg.value = "";
+			}
+			
+			function showNote(obj) {
+				//제일 껍데기 빌드
+				var ggeopDegi = document.createElement("div");
+	            ggeopDegi.classList.add("row");
+	            
+	            //이름이 들어올수도있지만 말풍선부터 만듬!
+	            var msgbox= document.createElement("div");
+	            msgbox.classList.add("col-10");
+	            
+	            //채팅아이디랑 본인아이디랑 똑같지않을때 상대방 아이디를 껍데기에 먼저 박음! 그리고 말풍선모양 바꿔줌!!
+	            if(obj.userId != uId){
+	            	var userName = document.createElement("div");
+		            userName.classList.add("col-10");
+	            	userName.classList.add("desk-userName");
+	            	userName.innerHTML = obj.userName;
+	            	ggeopDegi.appendChild(userName);
+	            	
+	            	msgbox.classList.add("bubble-you");
+	            } else{
+	            	msgbox.classList.add("bubble-me");
+	            }
+	            
+	            //안에 메시지를 만듬!!
+	            var msg = document.createElement("textarea");
+	            msg.classList.add("form-control");
+	            msg.classList.add("w-100");
+	            msg.classList.add("desk-textArea");
+	            msg.disabled = true;
+	            msg.value = obj.message;
+	            
+	            //메시지 만든걸 말풍선안에 집어넣음!!
+	            msgbox.appendChild(msg);
+	            
+	            //생성일 만듬!!
+	            var createTime = document.createElement("div");
+	            createTime.classList.add("col-10");
+	            createTime.classList.add("desk-createTime");
+	            createTime.innerHTML = obj.createTime;
+	            
+	            //고유 키값 나중에 쓸려고 박아둠!!
+	            var noteId = document.createElement("input");
+	            noteId.style.display = "none";
+	            noteId.value = obj.noteId;
+	            
+	            //껍데기에 순서대로 박음!!
+	            ggeopDegi.appendChild(msgbox);
+	            ggeopDegi.appendChild(createTime);
+	            ggeopDegi.appendChild(noteId);
+	            
+	            //책상에 완성된 노드를 박음!!
+	        	desk.prepend(ggeopDegi);
+	        	textAreaAutoSize([msg]);
+			}
+			
+// 			function showUserList(userList){
+// 				getEl("pid").innerHTML = "";
+// 				getEl("pid2").innerHTML = "";
+		   		
+// 		   		getEl("pid").innerHTML = "현재 접속자 : " + userList.length + " 명";
+		   		
+// 		   		for(var i=0; i< userList.length; i++){
+// 		    		getEl("pid2").innerHTML += userList[i] + "\n";
+// 		   		}
+// 			};
+		</script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>
+</body>
+</html>

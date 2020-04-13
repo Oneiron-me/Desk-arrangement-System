@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/defaultLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Thymeleaf 예제</title>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-6 mx-auto">
+			<h1>Page Content</h1>
+          		바보
+	    </div>
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.js}"></script> -->
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>    
+</body>
+</html>

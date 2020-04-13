@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/projectLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Thymeleaf 예제</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-6 mx-auto mt-2p h-98">
+          	<h1>PROJECTS LIST</h1>
+          	<p class="lead" id="lastChange">LAST MODIFIED TIME : 2019-01-01 12:53:99</p>
+          	<div class="row" id="projectList">
+				<div class="card mb-3 mt-20">
+					<h3 class="card-header">
+						<span id="title"> SAMYANG BIO PHARM TREND ANALYSIS</span>
+					</h3>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">
+							<div class="row">
+								<div class="col">
+									<span>START DATE : </span> <span id="stDate">2012-01-01</span>
+								</div>
+								<div class="col">
+									<span>END DATE : </span> <span id="endDate">2019-05-05</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="card-body">
+						<h6>DETAIL</h6>
+						<blockquote class="blockquote">
+							<p class="mb-0">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+								posuere erat a ante. Lorem ipsum dolor sit amet, consectetur
+								adipiscing elit. Integer posuere erat a ante. Lorem ipsum dolor
+								sit amet, consectetur adipiscing elit. Integer posuere erat a
+								ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+								Integer posuere erat a ante.<br> Lorem ipsum dolor sit
+								amet, consectetur adipiscing elit. Integer posuere erat a ante.
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+								posuere erat a ante.
+							</p>
+						</blockquote>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+	    	window.onload = function(){
+	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+					if(!!data){
+						console.log(data);
+						
+						var projectData = data["projects"]["list"];
+						viewProjectList('projectList', projectData);
+					}
+				});
+	    	};
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	</th:block>
+</body>
+</html>

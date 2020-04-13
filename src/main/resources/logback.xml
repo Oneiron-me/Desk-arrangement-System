@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<!-- <configuration scan="true">
+
+	Send debug messages to System.out
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%file:%line] %msg%n</pattern>
+		</encoder>
+		<encoder>
+	        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+	    </encoder>
+	</appender>
+
+	log the Spring Data Couchbase queries produced by the framework
+	<logger name="org.springframework.data.couchbase.repository.query" level="info"/>
+	<logger name="org.springframework.data.couchbase.repository.query.SpatialViewQueryCreator" level="info"/>
+	<logger name="org.springframework.data.couchbase.repository.query.AbstractN1qlBasedQuery" level="info"/>
+    <logger name="org.springframework.data.couchbase.repository.query.StringN1qlBasedQuery" level="info"/>
+    <logger name="org.springframework.data.couchbase.repository.support.IndexManager" level="info"/>
+
+	level: TRACE < DEBUG < INFO < WARN < ERROR
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+	Send debug messages to a file
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			Daily rollover
+			<fileNamePattern>${catalina.home}/logs/springdatacouchbase-%d{yyyy-MM-dd}.log</fileNamePattern>
+			Keep 7 days' worth of history
+			<maxHistory>7</maxHistory>
+			logs up to a maximum size of 10GB
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%file:%line] %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+</configuration> -->
+
+<configuration scan="true">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <!-- <logger name="com.couchbase.client.core.endpoint.Endpoint">
+		<level value="DEBUG"/>
+		<appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.couchbase.client.core.env.CoreEnvironment">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="STDOUT" />
+    </logger> -->
+    <logger name="org.springframework.data.couchbase.repository.query">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="STDOUT" />
+    </logger>
+	<logger name="org.springframework.data.couchbase.repository.query.SpatialViewQueryCreator">
+		<level value="DEBUG"/>
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework.data.couchbase.repository.query.AbstractN1qlBasedQuery">
+		<level value="DEBUG"/>
+		<appender-ref ref="STDOUT" />
+	</logger>
+    <logger name="org.springframework.data.couchbase.repository.query.StringN1qlBasedQuery">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.springframework.data.couchbase.repository.support.IndexManager">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="STDOUT" />
+    </logger>
+    <!-- <logger name="com.oneiron">
+  		<level level="DEBUG" additivity="false"/>
+  		<appender-ref ref="STDOUT" />
+  	</logger> -->
+  <!-- 	<logger name="com.oneiron.service.impl.RepositoryServiceImpl">
+  		<level level="DEBUG" additivity="false"/>
+  		<appender-ref ref="STDOUT" />
+  	</logger> -->
+</configuration>

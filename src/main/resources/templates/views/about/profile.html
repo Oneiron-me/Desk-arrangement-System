@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/aboutLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Profile</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-10 mx-auto mt-2p h-98">
+          	<h1>PROFILE</h1>
+          	<p class="lead">안녕하세요! 간단한 제 소개 화면입니다!</p>
+			<div class="card mb-3">
+				<h3 class="card-header">Introduce</h3>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<span>NAME : </span> <span id="realName"></span>
+					</li>
+					<li class="list-group-item">
+						<span>BIRTHDAY : </span> <span id="birth"></span>
+					</li>
+					<li class="list-group-item">
+						<span>LOCATION : </span> <span id="location"></span>
+					</li>
+					<li class="list-group-item">
+						<span>CONTACT : </span> <span id="contact"></span>
+					</li>
+					<li class="list-group-item">
+						<span>E-MAIL : </span> <span id="email"></span>
+					</li>
+				</ul>
+				<div class="card-body">
+					<h5 class="card-title">USE SKILL LIST</h5>
+					<h6 class="card-subtitle text-muted">HTML</h6>
+					<span id="html"></span>
+					<br>
+					<br>
+					<h6 class="card-subtitle text-muted">JAVA</h6>
+					<span id="java"></span>
+					<br>
+					<br>
+					<h6 class="card-subtitle text-muted">JAVA TEMPLATE ENGINE</h6>
+					<span id="javaTemplate"></span>
+					<br>
+					<br>
+					<h6 class="card-subtitle text-muted">DATABASE</h6>
+					<span id="database"></span>
+				</div>
+				<div class="card-footer text-muted" id="lastChange">LAST MODIFIED TIME : </div>
+			</div>
+		</div>
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+	    	window.onload = function(){
+	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+					if(!!data){
+						console.log(data);
+						
+						//개인정보 세팅
+						var info = data["info"];
+						
+						if(!!info){
+							for(result in info){
+								var element = getEl(result);
+								if(!!element){
+									element.innerHTML += info[result];
+								}
+							}
+						}
+					}
+				});
+	    	};
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	</th:block>
+</body>
+</html>

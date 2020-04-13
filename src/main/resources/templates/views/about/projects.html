@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/aboutLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Projects</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-6 mx-auto mt-2p h-98">
+          	<h1>PROJECTS LIST</h1>
+          	<p class="lead" id="lastChange"></p>
+          	<div class="row" id="projectList"></div>
+		</div>
+	</th:block>
+ 
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+	    	window.onload = function(){
+	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+					if(!!data){
+						getEl("lastChange").innerHTML = "LAST MODIFIED TIME : " + data["projects"]["lastChange"];
+						
+						var projectData = data["projects"]["list"];
+						viewProjectList('projectList', projectData);
+					}
+				});
+	    		
+	    	};
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	</th:block>
+</body>
+</html>

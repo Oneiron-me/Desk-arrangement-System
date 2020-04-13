@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/adminLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>Thymeleaf 예제</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-10 mx-auto mt-2p h-98">
+			<div class="row">
+				<div class="col float-left">
+					<h1>관리자 정보 수정 화면임 ㅋㅋㅋㅋ</h1>
+				</div>
+				<div class="row float-right">
+					<button type="button" class="btn btn-info" id="btnSave">SAVE</button>
+				</div>
+			</div>
+			<div class="bs-component mt-2p h-98">
+				<ul class="nav nav-tabs font-size-30">
+					<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile">Profile</a></li>
+					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#project">Projects</a></li>
+					<!-- <li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li> -->
+					<!-- <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+						<div class="dropdown-menu" style="">
+							<a class="dropdown-item" href="#">Action</a>
+							<a class="dropdown-item" href="#">Another action</a>
+							<a class="dropdown-item" href="#">Something else here</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Separated link</a>
+						</div>
+					</li> -->
+				</ul>
+				<div id="myTabContent" class="tab-content font-size-20 col-8 mx-auto h-100">
+					<div class="tab-pane fade active show" id="profile">
+						<form>
+<!-- 							<button type="button" id="btnGetInfo">정보 가져옴</button> -->
+							<div class="form-group">
+								<label class="col-form-label" for="realName">Name</label>
+								<input type="text" class="form-control" placeholder="이름 쓰시오" id="realName" name="realName" maxlength="20">
+							</div>
+							<div class="form-group">
+								<label class="col-form-label" for="birth">Birth</label>
+								<input type="text" class="form-control datepicker" placeholder="DatePicker 세팅해야지" id="birth" name="birth" maxlength=10>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label" for="weapon">DevTool</label>
+								<input type="text" class="form-control" placeholder="사용가능 기술" id="weapon" name="weapon" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="location">Location</label>
+								<input type="text" class="form-control" placeholder="사는곳" id="location" name="location" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="email">E-MAIL</label>
+								<input type="text" class="form-control" placeholder="이메일" id="email" name="email" maxlength="50">
+							</div>
+						</form>
+					</div>
+					<div class="tab-pane fade" id="project">
+						<div class="row mt-10">
+							<div class="col float-right">
+								<button type="button" class="btn btn-success float-right mb-20" id="btnAdd"><i class="fa fa-plus" aria-hidden="true"></i></button>
+							</div>
+						</div>
+						<form id="frmProjectContents">
+							<!-- <input type="text" name="projectSeqno" style="display:none;">
+							<div class="form-group">
+								<div class="row">
+									<div class="col">
+										<label class="col-form-label" for="title" id="title_0">Project Name</label>
+									</div>
+									<div class="col">
+										<button type="button" class="btn btn-danger float-right" id="btnDel"><i class="fa fa-minus" aria-hidden="true"></i></button>
+									</div>
+								</div>
+								<input type="text" class="form-control" placeholder="플젝 제목" id="title_0" name="title" maxlength=10>
+							</div>
+							<div class="row">
+								<div class="col form-group">
+									<label class="col-form-label" for="stDate_0">Project Start</label>
+									<input type="text" class="form-control datepicker" placeholder="플젝 시작일" id="stDate_0" name="stDate" maxlength=10>
+								</div>
+								<div class="col form-group">
+									<label class="col-form-label" for="endDate_0">Project End</label>
+									<input type="text" class="form-control datepicker" placeholder="플젝 종료일" id="endDate_0" name="endDate" maxlength=10>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="content_0">Project Detail</label>
+								<textarea class="form-control autosize" placeholder="플젝 내용 적기!" id="content_0" name="content" rows="10"></textarea>
+							</div> -->
+						</form>
+					</div>
+					<!-- <div class="tab-pane fade" id="dropdown1">
+						<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they
+							sold out mcsweeney's organic lomo retro fanny pack lo-fi
+							farm-to-table readymade. Messenger bag gentrify pitchfork tattooed
+							craft beer, iphone skateboard locavore carles etsy salvia banksy
+							hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify
+							squid 8-bit cred pitchfork.</p>
+					</div>
+					<div class="tab-pane fade" id="dropdown2">
+						<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy
+							art party before they sold out master cleanse gluten-free squid
+							scenester freegan cosby sweater. Fanny pack portland seitan DIY,
+							art party locavore wolf cliche high life echo park Austin. Cred
+							vinyl keffiyeh DIY salvia PBR, banh mi before they sold out
+							farm-to-table VHS viral locavore cosby sweater.</p>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+	    	//addProjectForm
+	    	var formName = "frmProjectContents";
+	    	var divID = "project";
+	    
+	    	window.onload = function(){
+	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+					console.log(data);
+					
+					if(!!data){
+						
+						//개인정보 세팅
+						var info = data["info"];
+						
+						if(!!info){
+							for(result in info){
+								var element = getEl(result);
+								if(!!element){
+									element.value = info[result];
+								}
+							}
+						}
+						
+						//플젝 정보 폼 데이터 만듬
+						var projectData = data["projects"];
+						
+						generateProjectDetailForm(formName, divID, null);
+						
+					}
+					
+					$('.datepicker').datepicker({
+				        clearBtn: true,
+				        format: "yyyy-mm-dd"
+				    });
+				});
+	    		
+	    		//form plus action
+	    		getEl("btnAdd").event("click", function(){
+	    			addProjectForm(formName, divID);
+	    		});
+	    	};
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">oneIron</title>
+    <!-- 공통 css, js, meta tag -->
+    <th:block th:include="fragments/commonHeader"></th:block>
+</head>
+<body>
+<!--     <h1>기본 레이아웃</h1> -->
+	<div class="h-12 menu" th:include="fragments/commonMenu :: commonMenu"></div>
+    <div class="container mw-100 h-90">
+    	<div class="row align-items-start h-100">
+		    <!-- page content body 구성 -->
+		    <th:block layout:fragment="content"></th:block>
+    	</div>
+    </div>
+    
+    <!-- 공통 javascript -->
+    <th:block th:replace="fragments/commonScript"></th:block>
+
+    <!-- page content javascript -->
+    <th:block layout:fragment="pageCustomScript"></th:block>
+</body>
+</html>

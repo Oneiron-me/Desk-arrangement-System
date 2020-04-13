@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="fragments/layout/adminLayout">
+<head>
+<!-- 	<meta charset="utf-8"> -->
+    <title>ADMIN</title>
+    
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="col-10 mx-auto mt-2p h-98">
+			<div class="row">
+				<div class="col float-left">
+					<h1>관리자 정보 수정 화면임 ㅋㅋㅋㅋ</h1>
+				</div>
+				<div class="row float-right">
+				</div>
+			</div>
+			<div class="bs-component mt-2p h-98">
+				<ul class="nav nav-tabs font-size-30">
+					<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile">Profile</a></li>
+					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#project">Projects</a></li>
+				</ul>
+				<div id="myTabContent" class="tab-content font-size-20 col-8 mx-auto h-100">
+					<div class="tab-pane fade active show" id="profile">
+						<div class="row mt-10">
+							<div class="col float-right">
+								<button type="button" class="btn btn-info float-right ml-20" id="btnProfileSave">SAVE</button>
+							</div>
+						</div>
+						<form id="frmProfile">
+<!-- 							<button type="button" id="btnGetInfo">정보 가져옴</button> -->
+							<div class="form-group">
+								<label class="col-form-label" for="realName">Name</label>
+								<input type="text" class="form-control" placeholder="이름 쓰시오" id="realName" name="realName" maxlength="20">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="birth">Birth</label>
+								<input type="text" class="form-control datepicker" placeholder="DatePicker 세팅해야지" id="birth" name="birth" maxlength=10>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="contact">Contact</label>
+								<input type="text" class="form-control" placeholder="폰번" id="contact" name="contact" maxlength="20">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="location">Location</label>
+								<input type="text" class="form-control" placeholder="사는곳" id="location" name="location" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="email">E-MAIL</label>
+								<input type="text" class="form-control" placeholder="이메일" id="email" name="email" maxlength="50">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="html">HTML</label>
+								<input type="text" class="form-control" placeholder="사용가능 기술" id="html" name="html" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="java">JAVA</label>
+								<input type="text" class="form-control" placeholder="사용가능 기술" id="java" name="java" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="javaTemplate">JAVA TEMPLATE ENGINE</label>
+								<input type="text" class="form-control" placeholder="사용가능 기술" id="javaTemplate" name="javaTemplate" maxlength="100">
+							</div>
+							
+							<div class="form-group">
+								<label class="col-form-label" for="database">DATABASE</label>
+								<input type="text" class="form-control" placeholder="사용가능 기술" id="database" name="database" maxlength="100">
+							</div>
+						</form>
+					</div>
+					<div class="tab-pane fade" id="project">
+						<div class="row mt-10">
+							<div class="col float-right">
+								<button type="button" class="btn btn-info float-right ml-20" id="btnProjectSave" style="position: fixed; top: 50%; right: 10%;">SAVE</button>
+								<button type="button" class="btn btn-success float-right mb-20" style="position: fixed; top: 40%; right: 10%;" id="btnAdd"><i class="fa fa-plus" aria-hidden="true"></i></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block layout:fragment="pageCustomScript">
+	    <script>
+	    	//addProjectForm
+	    	var formName = "frmProjectContents";
+	    	var divID = "project";
+	    
+	    	window.onload = function(){
+	    		//걍 폼로드하자마자 데이터 싹 가져옴
+	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+					if(!!data){
+						//개인정보 세팅
+						var info = data["info"];
+						
+						if(!!info){
+							for(result in info){
+								var element = getEl(result);
+								if(!!element){
+									element.value = info[result];
+								}
+							}
+						}
+						
+						//플젝 정보 폼 데이터 만듬
+						var projectData = data["projects"]["list"];
+						
+						generateProjectDetailForm(formName, divID, projectData);
+						
+						// 데이터없으면 걍 기본으로 폼 생성해줌
+					} else {
+						addProjectForm(formName, divID);
+					}
+					
+					elementsEvent();
+				});
+	    	};
+	    	
+	    	//각종 엘리먼트들 이벤트들 모아둠
+	    	function elementsEvent(){
+	    		//form plus action
+	    		getEl("btnAdd").event("click", function(){
+	    			addProjectForm(formName, divID);
+	    		});
+	    		
+	    		//프로필 내용 저장
+	    		getEl("btnProfileSave").event("click", function(){
+	    			ajaxJsonParam('/admin/putAdminInfo', $("#frmProfile").serializeObject()).then(function(data){
+	    				if(!!data){
+	    					alert("저장했습니다!");
+	    				}
+	    			});
+	    		});
+	    		
+	    		// 플젝 내용 저장보턴
+	    		getEl("btnProjectSave").event("click", function(){
+	    			ajaxJsonParam('/admin/putAdminProjectInfo', {"list": getFormDataByClassName("upsertForm")}).then(function(data){
+	    				if(!!data){
+	    					alert("저장했습니다!");
+	    				}
+	    			});
+	    			
+	    		/* 	if(!validataion()){
+	    				alert("내용을 모두 입력해주세요!"); return false;
+	    			}
+	    			 */
+	    		});
+	    	}
+	    </script>
+	</th:block>    
+	<th:block layout:fragment="pageCustomCss">
+	    <!-- <script th:src="@{/assets/vendor/jquery/jquery.css}"></script> -->
+	</th:block>
+</body>
+</html>

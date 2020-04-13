@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>로그인 페이지</title>
+</head>
+<!-- <link href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+<link href="/static/css/boostwatch.css" rel="stylesheet">
+<link href="/static/css/oneiron.css" rel="stylesheet">
+<link href="/static/css/animatedButton.css" rel="stylesheet">
+<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="/webjars/bootstrap/4.4.1/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/oneiron.js"></script>
+<body>
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-10 mx-auto">
+        	<h1 class="display-3 text-center">계속 개발중 입니다!!!!!</h1>
+            <div class="jumbotron">
+				<h1 class="display-3 text-center">LOGIN</h1>
+				<form id="frmSubmit" action="/login" method="post">
+			        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			        <div class="form-group" style="background: #343a40;">
+						<p align="center" class="pa20">
+							<label for="exampleInputEmail1 text-left" class="text-left" style="width:80%; color: white;" >Email address</label>
+							<input type="email" class="form-control" style="width:80%;" id="userId" name="username" aria-describedby="emailHelp" placeholder="이메일을 입력해주세요" autocomplete="off">
+							<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+							<br>
+							<label for="exampleInputPassword1" class="text-left" style="width:80%; color: white;" >Password</label>
+							<input type="password" style="width:80%;" class="form-control" id="userPw" name="password" placeholder="Password">
+							<br>
+							<button type="button" id="btnSignup" class="btn btn-success animeBtn colorGreen" style="width:30%;">SIGN UP</button>
+							<button type="button" id="btnLogin" class="btn btn-info animeBtn-2 btn-1 colorBlue" style="width:30%; margin-left:20%;">LOG IN</button>
+						</p>
+		    		</div>
+			    </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+
+	getEl("btnSignup").event("click", function(){
+		alert("기능 구현중입니다!!!");
+	});
+	getEl("btnLogin").event("click", function(){
+		
+		var id = getEl("userId").value;
+		var pw = getEl("userPw").value;
+		
+		if(!id){
+			alert("이메일을 입력해주세요!");
+			return false;
+		}
+		
+		if(!pw){
+			alert("비밀번호를 입력해주세요!");
+			return false;
+		}
+		
+		getEl("frmSubmit").submit();
+		
+		setLoadingBar();
+	});
+	
+	getEl("userPw").event("keyup", function(e){
+		
+		if(e.keyCode == 13){
+			var pw = getEl("userPw").value;
+
+			if(!pw){
+				alert("비밀번호를 입력해주세요!");
+				return false;
+			}
+			
+			getEl("frmSubmit").submit();
+			
+			setLoadingBar();
+		}
+	});
+	
+	/*<![CDATA[*/
+	var all = /*[[ ${securityExceptionMsg} ]]*/;
+	if(!!all){
+		alert(all);
+	}
+	/*]]>*/
+</script>
+
+</html>
