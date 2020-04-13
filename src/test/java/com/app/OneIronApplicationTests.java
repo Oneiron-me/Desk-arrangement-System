@@ -1,4 +1,4 @@
-package com.demo;
+package com.app;
 
 import javax.servlet.ServletContext;
 
