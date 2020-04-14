@@ -1,6 +1,7 @@
 package com.oneiron.desk.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.HtmlUtils;
 
 import com.oneiron.desk.service.DeskService;
 
@@ -52,6 +52,11 @@ public class DeskController {
 	@RequestMapping("/getNoteList")
 	public @ResponseBody Map<String, Object> getNoteList(@RequestBody Map<String, Object> map) {
 		return deskServiceImpl.getNoteList(map);
+	}
+	
+	@RequestMapping("/getInviteUserList")
+	public @ResponseBody List<Map<String, Object>> getInviteUserList(@RequestBody Map<String, Object> map) {
+		return deskServiceImpl.getInviteUserList(map);
 	}
 	
 //	@RequestMapping("/getSessionCount")

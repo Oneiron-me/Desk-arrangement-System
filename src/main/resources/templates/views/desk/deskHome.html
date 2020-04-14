@@ -64,10 +64,50 @@
 				    </div>
 				</div>
 			</div>
+			
+			<div id="popup" class="pop_style h-50">
+				<span class="float-right" style="cursor:pointer;"><i id="btnClose" class="far fa-window-close b-close fa-3x"></i></span>
+				<div class="container h-100">
+				    <div class="row align-items-center h-100">
+				        <div class="col-12 mx-auto">
+				            <div class="jumbotron" style="background:white; padding:0;">
+				            	<table class="table table-hover">
+				            		<colgroup>
+				            			<col width="50%">
+				            			<col width="50%">
+									</colgroup>
+									<thead>
+										<tr>
+											<th scope="col">
+												<input type="text" class="form-control" placeholder="USER ID SEARCH" id="srchUserId" style="padding : 0.35rem 0.5rem !important;">
+											</th>
+											<th scope="col">
+												<input type="text" class="form-control" placeholder="USER NAME SEARCH" id="srchUserName" style="padding : 0.35rem 0.5rem !important;">
+											</th>
+										</tr>
+									</thead>
+								</table>
+								<div class="bs-component" style="height:290px !important; overflow:auto;">
+									<table class="table table-hover" style="border:1px solid rgba(0, 0, 0, 0.1);">
+										<colgroup>
+					            			<col width="50%">
+					            			<col width="50%">
+										</colgroup>
+										<tbody id="userTableBody">
+										</tbody>
+									</table>
+								</div>
+							</div>
+				        </div>
+				    </div>
+				</div>
+			</div>
 		</div>
 	</th:block>
 	<th:block layout:fragment="pageCustomScript">
 	   <script>
+	   		var $bPopup = $('#popup');
+	   		
 	   		var deskId = "[[${session.lastDeskId}]]";
 	   		var uId = "[[${session.userInfo.id}]]";
 	   		var uName = "[[${session.userInfo.name}]]";
@@ -88,7 +128,19 @@
 			    });
 			    
 			    getEl("btnInviteOtherHuman").event("click", function(e){
-			    	alert("구현중입니다 ㅠ");
+			    	$bPopup.bPopup({
+			            modalClose: false,
+			            opacity: 0.6,
+			            positionStyle: 'fixed', //'fixed' or 'absolute'
+			            onOpen: function() {
+			            	//열릴때 이벤트
+			            	getInviteUserList();
+			            }, 
+			            onClose: function() { 
+			            	//닫힐때 초기화
+// 		    	        	getEl("frmDeskInfo").reset();
+			            }
+			        });
 			    });
 			    
 // 				ajaxJsonParam("/desk/getNoteList", {"deskId" : deskId}).then(function(data){
@@ -96,8 +148,31 @@
 // 					connect();
 					
 // 				});
-				
+
 			};
+			
+			function getInviteUserList(){
+					
+					
+					ajaxJsonParam("/desk/getInviteUserList", {"deskId" : deskId}).then(function(data){
+						
+						for(var i=0; i<data.length; i++){
+							var clazz = (i % 2 == 1) ? "table-active" : "";
+							var html = '<tr id="userTableTrNum'+i+'" class="'+clazz+'">';
+							html += '	<th scope="row">'+data[i]["userId"]+'</th>'
+							html += '	<td>'+data[i]["userName"]+'</td>'
+							html += '</tr>';
+							$("#userTableBody").append(html);
+							
+							$("#userTableTrNum"+i).dblclick(function(){
+								alert("기능 구현중입니다!");
+							});
+							
+						}
+						
+						console.log(data);
+					});
+			}
 			
 			function setConnected(connected) {
 			    $("#connect").prop("disabled", connected);

@@ -133,6 +133,7 @@ public class IntroServiceImpl implements IntroService {
 			deskMap.put("deskId", uuid);
 			deskMap.put("userList", userList);
 			deskMap.put("useAt", "Y");
+			deskMap.put("docType", "desk");
 			deskMap.put("msgList", new ArrayList<String>());
 			
 			String json = null;
@@ -169,7 +170,7 @@ public class IntroServiceImpl implements IntroService {
 		StringBuffer query = new StringBuffer();
 
 		query.append("SELECT a.comments, a.createTime, a.deskId, a.deskName, a.userList FROM `oneiron` a ");
-		query.append("where (ANY v IN a.userList SATISFIES v.userId = $userId END) and a.useAt = 'Y' ");
+		query.append("where (ANY v IN a.userList SATISFIES v.userId = $userId END) and a.useAt = 'Y' and a.docType = 'desk' ");
 
 		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
 		N1qlParams params = N1qlParams.build().pretty(false);

@@ -9,9 +9,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +135,47 @@ public class DeskServiceImpl implements DeskService{
 		
 		if(list.size() > 0)
 			result.putAll(list.get(0));
+		
+		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getInviteUserList(Map<String, Object> map) {
+		Util util = new Util();
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("deskId", map.get("deskId").toString());
+		
+		String paramStr = null;
+		try {
+			paramStr = util.serializeObject(paramMap);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		StringBuffer query = new StringBuffer();
+
+		query.append("select b.id as userId, b.name as userName from( ");
+		query.append("	select a.id, a.name, ");
+		query.append("		case when ( ANY v IN a.deskList SATISFIES v = $deskId END) then true else false end as exist ");
+		query.append("	from `oneiron` a ");
+		query.append("	where a.docType = 'user' ");
+		query.append(") b ");
+		query.append("where b.exist = false ");
+		
+
+		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
+		N1qlParams params = N1qlParams.build().pretty(false);
+		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
+		List<SuperHashMap> list = defaultTemplate.findByN1QLProjection(paramQuery, SuperHashMap.class);
+
+		logger.info("param : {}", paramQuery);
+		logger.info("쿼리 결과 : {}" , list);
+		
+		List<Map<String, Object>> result = new ArrayList<>();
+		
+		if(list.size() > 0)
+			result.addAll(list);
 		
 		return result;
 	}
