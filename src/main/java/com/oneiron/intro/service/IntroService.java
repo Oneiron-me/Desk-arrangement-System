@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.oneiron.intro.doc.DeskDoc;
-import com.oneiron.util.SuperHashMap;
 
 public interface IntroService {
 
@@ -26,5 +25,5 @@ public interface IntroService {
 	 * 
 	 * @return desk list를 불러옵니다
 	 */
-	public List<SuperHashMap> getDeskList();
+	public List<Map<String, Object>> getDeskList();
 }

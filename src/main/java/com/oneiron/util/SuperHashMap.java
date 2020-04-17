@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class SuperHashMap extends HashMap<String, Object>{
+public class SuperHashMap extends HashMap<String, Object> implements Map<String, Object>{
 	private static final long serialVersionUID = 4075742283466322480L;
 	
 	public SuperHashMap() {

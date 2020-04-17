@@ -14,7 +14,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import com.oneiron.util.SuperHashMap;
 import com.oneiron.ws.SessionInfo;
 
 @Component
@@ -32,6 +31,7 @@ public class StompInterceptor implements ChannelInterceptor{
 	public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
 		
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+		@SuppressWarnings("unused")
 		String sessionId = accessor.getSessionId();
 		
 		accessor.getMessageHeaders().get("nativeHeaders");

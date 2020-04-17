@@ -23,10 +23,10 @@ import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryResult;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.oneiron.common.service.CommonService;
 import com.oneiron.intro.doc.DeskDoc;
 import com.oneiron.intro.service.IntroService;
 import com.oneiron.util.CommonFunction;
-import com.oneiron.util.SuperHashMap;
 import com.oneiron.util.Util;
 
 @Service
@@ -40,6 +40,9 @@ public class IntroServiceImpl implements IntroService {
 	
 	@Resource(name="commonFunction")
 	private CommonFunction commonFunction;
+	
+	@Autowired
+	CommonService commonServiceImpl;
 	
 	@Override
 	public int deskSave(DeskDoc doc) {
@@ -152,7 +155,7 @@ public class IntroServiceImpl implements IntroService {
 	}
 
 	@Override
-	public List<SuperHashMap> getDeskList() {
+	public List<Map<String, Object>> getDeskList() {
 		String userId = commonFunction.userId();
 		
 		Util util = new Util();
@@ -171,18 +174,8 @@ public class IntroServiceImpl implements IntroService {
 
 		query.append("SELECT a.comments, a.createTime, a.deskId, a.deskName, a.userList FROM `oneiron` a ");
 		query.append("where (ANY v IN a.userList SATISFIES v.userId = $userId END) and a.useAt = 'Y' and a.docType = 'desk' ");
-
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		List<SuperHashMap> list = defaultTemplate.findByN1QLProjection(paramQuery, SuperHashMap.class);
-
-		logger.info("param : {}", paramQuery);
 		
-		
-		logger.info("쿼리 결과 : {}" , list);
-		
-		return list;
+		return commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
 	}
 
 }

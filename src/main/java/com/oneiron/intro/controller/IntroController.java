@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.oneiron.intro.service.IntroService;
-import com.oneiron.login.doc.UserDoc;
-import com.oneiron.util.SuperHashMap;
 
 /**
  * 
@@ -56,7 +51,7 @@ public class IntroController {
 	 * @return DESK LIST 가져옵니다
 	 */
 	@RequestMapping("/getDeskList")
-	public @ResponseBody List<SuperHashMap> getDeskList() {
+	public @ResponseBody List<Map<String, Object>> getDeskList() {
 		return introServiceImpl.getDeskList();
 	}
 }

@@ -15,14 +15,10 @@ import org.springframework.data.couchbase.core.CouchbaseTemplate;
 import org.springframework.stereotype.Service;
 
 import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.document.json.JsonObject;
-import com.couchbase.client.java.query.N1qlParams;
-import com.couchbase.client.java.query.N1qlQuery;
-import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.oneiron.admin.service.AdminService;
+import com.oneiron.common.service.CommonService;
 import com.oneiron.util.CommonFunction;
-import com.oneiron.util.SuperHashMap;
 import com.oneiron.util.Util;
 
 @Service
@@ -37,12 +33,13 @@ public class AdminServiceImpl implements AdminService {
 	@Resource(name="commonFunction")
 	private CommonFunction commonFunction;
 	
+	@Autowired
+	CommonService commonServiceImpl;
+	
 	@Override
 	public Map<String, Object> getAdminInfoByN1ql() {
 		
 		String userId = "properties@kakao.com";
-		
-		logger.info("세션정보 {}" , userId);
 		
 		Util util = new Util();
 		
@@ -58,18 +55,14 @@ public class AdminServiceImpl implements AdminService {
 		}
 
 		StringBuffer query = new StringBuffer();
-
 		query.append("select a.info, a.projects from `oneiron` a where META().id = $id limit 1");
-
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		List<SuperHashMap> list = defaultTemplate.findByN1QLProjection(paramQuery, SuperHashMap.class);
+		
+		List<Map<String, Object>> list = commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
 		
 		Map<String, Object> result = new HashMap<>();
+		
 		if(list.size() > 0) {
-			result = list.get(0);
+			result.putAll(list.get(0));
 		}
 		
 		return result;

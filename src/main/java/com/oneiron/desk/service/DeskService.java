@@ -1,5 +1,6 @@
 package com.oneiron.desk.service;
 
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface DeskService {
 	/**
 	 * 
 	 * @param map
-	 * @return 초대할 유저 목록을 가져옵니다
+	 * @return 초대할 유저 목록을 가져옵니다. HashMap을 extends 한 모든 객체를 뱉어줍니다.
 	 */
 	public List<Map<String, Object>> getInviteUserList(Map<String, Object> map);
 }

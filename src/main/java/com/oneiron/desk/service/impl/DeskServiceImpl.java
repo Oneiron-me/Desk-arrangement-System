@@ -1,7 +1,6 @@
 package com.oneiron.desk.service.impl;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,9 +24,9 @@ import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryResult;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.oneiron.common.service.CommonService;
 import com.oneiron.desk.service.DeskService;
 import com.oneiron.login.doc.UserDoc;
-import com.oneiron.util.SuperHashMap;
 import com.oneiron.util.Util;
 
 @Service
@@ -41,6 +40,9 @@ public class DeskServiceImpl implements DeskService{
 	
 	@Autowired
 	HttpServletRequest httpServletRequest;
+	
+	@Autowired
+	CommonService commonServiceImpl;
 
 	@Override
 	public Map<String, Object> putNote(Map<String, Object> map, SimpMessageHeaderAccessor accessor) {
@@ -56,8 +58,7 @@ public class DeskServiceImpl implements DeskService{
 		Principal parkSipal = accessor.getUser();
 		UserDoc user = (UserDoc)((Authentication) parkSipal).getPrincipal();
 		
-//		logger.info("박씨팔 : {}", parkSipal );
-//		logger.info("ㅋ 씨부랄 : {}", user);
+//		logger.info("프린시팔 박시팔 : {}", parkSipal );
 		
 //		for(String header : accessor.getMessageHeaders().keySet()) {
 //			logger.info("test22 : {}", header);
@@ -122,14 +123,8 @@ public class DeskServiceImpl implements DeskService{
 
 		query.append("SELECT a.msgList FROM `oneiron` a ");
 		query.append("where a.deskId = $deskId and (ANY v IN a.msgList SATISFIES v.deleteAt = 'N' END) limit 1 ");
-
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		List<SuperHashMap> list = defaultTemplate.findByN1QLProjection(paramQuery, SuperHashMap.class);
-
-		logger.info("param : {}", paramQuery);
-		logger.info("쿼리 결과 : {}" , list);
+		
+		List<Map<String, Object>> list = commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		
@@ -163,20 +158,6 @@ public class DeskServiceImpl implements DeskService{
 		query.append(") b ");
 		query.append("where b.exist = false ");
 		
-
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		List<SuperHashMap> list = defaultTemplate.findByN1QLProjection(paramQuery, SuperHashMap.class);
-
-		logger.info("param : {}", paramQuery);
-		logger.info("쿼리 결과 : {}" , list);
-		
-		List<Map<String, Object>> result = new ArrayList<>();
-		
-		if(list.size() > 0)
-			result.addAll(list);
-		
-		return result;
+		return commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
 	}
 }
