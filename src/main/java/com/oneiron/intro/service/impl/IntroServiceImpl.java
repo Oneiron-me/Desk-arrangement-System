@@ -107,22 +107,10 @@ public class IntroServiceImpl implements IntroService {
 
 		query.append("UPDATE `oneiron` USE KEYS $userId SET deskList = ARRAY_PUT(IFNULL(deskList, []), $deskId)");
 
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		N1qlQueryResult  result = defaultTemplate.queryN1QL(paramQuery);
-
-		logger.info("param : {}", paramQuery);
-		
-		
-		logger.info("삽입 결과 : {}" , result);
-		
-		resultBool = result.finalSuccess();
-		
+		resultBool = commonServiceImpl.queryN1QL(query.toString(), paramStr);
 		
 		//user document에 deskList가 만들어지면 desk document를 생성함.
 		if(resultBool) {
-			
 			
 			List<Map<String,Object>> userList = new ArrayList<>();
 			Map<String,Object> userListInnerMap = new HashMap<String, Object>();

@@ -13,7 +13,7 @@ public interface CommonService {
 	 * @param param 파라미터
 	 * @return List
 	 */
-	List<Map<String, Object>> findByN1qlProjection(String query, String param);
+	public List<Map<String, Object>> findByN1qlProjection(String query, String param);
 	
 	/**
 	 * 
@@ -21,5 +21,5 @@ public interface CommonService {
 	 * @param param 파라미터
 	 * @return N1qlQueryResult
 	 */
-	N1qlQueryResult queryN1QL(String query, String param);
+	public boolean queryN1QL(String query, String param);
 }

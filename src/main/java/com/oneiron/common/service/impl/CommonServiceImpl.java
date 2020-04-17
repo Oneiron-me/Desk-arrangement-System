@@ -42,8 +42,8 @@ final Logger logger = LoggerFactory.getLogger(this.getClass());
 	}
 
 	@Override
-	public N1qlQueryResult queryN1QL(String query, String param) {
-		return defaultTemplate.queryN1QL(N1qlQuery.parameterized(query.toString(), JsonObject.fromJson(param), N1qlParams.build().pretty(false)));
+	public boolean queryN1QL(String query, String param) {
+		return defaultTemplate.queryN1QL(N1qlQuery.parameterized(query.toString(), JsonObject.fromJson(param), N1qlParams.build().pretty(false))).finalSuccess();
 	}
 
 }

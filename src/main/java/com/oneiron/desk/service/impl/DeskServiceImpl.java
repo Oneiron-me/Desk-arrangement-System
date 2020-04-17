@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlParams;
 import com.couchbase.client.java.query.N1qlQuery;
@@ -84,17 +85,9 @@ public class DeskServiceImpl implements DeskService{
 
 		query.append("UPDATE `oneiron` USE KEYS $deskId SET msgList = ");
 		query.append("ARRAY_PREPEND( {\"message\" : $message, \"createTime\" : $createTime, \"noteId\" : $noteId, \"userId\" : $userId, \"userName\" : $userName, \"deleteAt\" : \"N\"}, msgList)");
-		
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
-		N1qlQueryResult  result = defaultTemplate.queryN1QL(paramQuery);
 
-		logger.info("param : {}", paramQuery);
-		logger.info("삽입 결과 : {}" , result);
-		
 		//넣은 결과임
-		boolean successFlag = result.finalSuccess();
+		boolean successFlag = commonServiceImpl.queryN1QL(query.toString(), paramStr);
 		
 		if(successFlag)
 			map.put("flag", "success");
@@ -159,5 +152,35 @@ public class DeskServiceImpl implements DeskService{
 		query.append("where b.exist = false ");
 		
 		return commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
+	}
+
+	@Override
+	public boolean putInviteUsers(Map<String, Object> map) {
+		
+		boolean result = false;
+		
+		Util util = new Util();
+		
+		String paramStr = null;
+		try {
+			paramStr = util.serializeObject(map);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		StringBuffer query = new StringBuffer();
+		
+		query.append("UPDATE `oneiron` USE KEYS $userId SET deskList = ARRAY_PUT(IFNULL(deskList, []), $deskId)");
+		
+		//유저를 초대해서 집어넣은게 성공했을때만!!
+		if(commonServiceImpl.queryN1QL(query.toString(), paramStr)) {
+			// sb 다시 재활용해서 쓴담
+			query = new StringBuffer();
+			query.append("UPDATE `oneiron` USE KEYS $deskId SET userList = ");
+			query.append("ARRAY_PUT(IFNULL(userList, []), {\"userId\" : $userId, \"userName\" : $userName })");
+			result = commonServiceImpl.queryN1QL(query.toString(), paramStr);
+		}
+		
+		return result;
 	}
 }

@@ -45,7 +45,6 @@ public class DeskController {
 	@RequestMapping("/set")
 	public String setDeskId(@RequestParam("deskId") String deskId, HttpSession session) {
 		session.setAttribute("lastDeskId", deskId);
-		
 		return "redirect:/desk/home";
 	}
 	
@@ -57,6 +56,11 @@ public class DeskController {
 	@RequestMapping("/getInviteUserList")
 	public @ResponseBody List<Map<String, Object>> getInviteUserList(@RequestBody Map<String, Object> map) {
 		return deskServiceImpl.getInviteUserList(map);
+	}
+	
+	@RequestMapping("/putInviteUsers")
+	public @ResponseBody boolean putInviteUsers(@RequestBody Map<String, Object> map) {
+		return deskServiceImpl.putInviteUsers(map);
 	}
 	
 //	@RequestMapping("/getSessionCount")

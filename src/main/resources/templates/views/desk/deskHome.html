@@ -152,39 +152,50 @@
 			};
 			
 			function getInviteUserList(){
-					
+				
+				var deskIdParam = {"deskId" : deskId};
+				
 				$("#userTableBody").html("");
 					
-					ajaxJsonParam("/desk/getInviteUserList", {"deskId" : deskId}).then(function(data){
+				ajaxJsonParam("/desk/getInviteUserList", deskIdParam).then(function(data){
+					
+					for(var i=0; i<data.length; i++){
+						var clazz = (i % 2 == 1) ? "table-active" : "";
+						var html = '<tr id="userTableTrNum'+i+'" class="'+clazz+' userTableTr">';
+						html += '	<th scope="row">'+data[i]["userId"]+'</th>'
+						html += '	<td>'+data[i]["userName"]+'</td>'
+						html += '	<td style="display:none;">'
+						html += '		<form id="userTableForm'+i+'">'
+						html += '			<input type="text" name="userId" value="'+data[i]["userId"]+'" style="display:none;"/>'
+						html += '			<input type="text" name="userName" value="'+data[i]["userName"]+'" style="display:none;"/>'
+						html += '		</form>'
+						html += '	</td>'
+						html += '</tr>';
+						$("#userTableBody").append(html);
 						
-						for(var i=0; i<data.length; i++){
-							var clazz = (i % 2 == 1) ? "table-active" : "";
-							var html = '<tr id="userTableTrNum'+i+'" class="'+clazz+' userTableTr">';
-							html += '	<th scope="row">'+data[i]["userId"]+'</th>'
-							html += '	<td>'+data[i]["userName"]+'</td>'
-							html += '	<td style="display:none;">'
-							html += '		<form id="userTableForm'+i+'">'
-							html += '			<input type="text" name="userId" value="'+data[i]["userId"]+'"/>'
-							html += '			<input type="text" name="userName" value="'+data[i]["userName"]+'"/>'
-							html += '		</form>'
-							html += '	</td>'
-							html += '</tr>';
-							$("#userTableBody").append(html);
-							
-						}
+					}
+					
+					var trList = document.querySelectorAll(".userTableTr");
+					for(var i=0; i<trList.length; i++){
 						
-						var trList = document.querySelectorAll(".userTableTr");
-						for(var i=0; i<trList.length; i++){
+						$("#"+trList[i].id).dblclick(function(){
+							var dataSet = $("#"+this.id + " > td > form").serializeObject();
+							if(!confirm(dataSet.userName + " 님을 초대하시겠어요?"))
+								return false;
 							
-							$("#"+trList[i].id).dblclick(function(){
-								var dataSet = $("#"+this.id + " > td > form").serializeObject();
-								if(!confirm(dataSet.userName + " 님을 초대하시겠어요?"))
-									return false;
+							//파라미터 합침
+							var param = Object.assign(dataSet, deskIdParam);
+							ajaxJsonParam("/desk/putInviteUsers", param).then(function(data){
+								if(data){
+									alert("초대했습니다!");
+								} else
+									alert("초대가 안됐습니다 ㅠ");
 								
-								alert("기능 열심히 구현중입니다!");
+								getInviteUserList();
 							});
-						}
-					});
+						});
+					}
+				});
 			}
 			
 			function setConnected(connected) {
