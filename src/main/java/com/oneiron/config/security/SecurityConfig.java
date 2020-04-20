@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -36,6 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+	
+	@Autowired
+	CustomOidcUserService customOidcUserService;
+	
+	@Autowired
+	CustomOAuth2AuthenticationSuccessHandler customOAuth2AuthenticationSuccessHandler;
 	
 	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
 		customAuthenticationSuccessHandler.setDefaultUrl("/");
@@ -73,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/admin/home").access("hasAuthority('ADMIN')");
 		
 		http.authorizeRequests()
-			.antMatchers("/", "/test","/login", "/loginProcessing","/error", "/webjars/**", "/static/**").permitAll()
+			.antMatchers("/", "/test","/login", "/callback", "/error", "/webjars/**", "/static/**").permitAll()
 			.anyRequest().authenticated();
         
 		// 웹소켓은 csrf 뗐다!!!
@@ -84,7 +93,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.frameOptions()
 				.sameOrigin()
 			.and()
-				.authorizeRequests()
+			.authorizeRequests()
+			.and()
+				.oauth2Login()
+				.loginPage("/login")
+				.successHandler(customOAuth2AuthenticationSuccessHandler)
+				.permitAll()
+            	.userInfoEndpoint()
+            	.oidcUserService(customOidcUserService)
+            .and()
 			.and() //로그인 관련
 				.formLogin()
 				.loginPage("/login")
@@ -93,7 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.failureHandler(customAuthenticationFailureHandler()) // 실패 핸들러
 				.permitAll()
 			.and()
-				.authenticationProvider(audenticationProvider())
 				.logout() // logout설정
 				.clearAuthentication(true)
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -112,7 +128,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailService);
+		// 일반로그인만 authentication provider 놧따!
+		auth.userDetailsService(userDetailService)
+			.and()
+				.authenticationProvider(audenticationProvider());
+	}
+	
+	@Bean
+	public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+		return new HttpSessionOAuth2AuthorizationRequestRepository();
 	}
 	
 	@Bean

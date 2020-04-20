@@ -30,9 +30,14 @@
 							<br>
 							<button type="button" id="btnSignup" class="btn btn-success animeBtn colorGreen" style="width:30%;">SIGN UP</button>
 							<button type="button" id="btnLogin" class="btn btn-info animeBtn-2 btn-1 colorBlue" style="width:30%; margin-left:20%;">LOG IN</button>
+							<br>
 						</p>
 		    		</div>
 			    </form>
+			    <h3>SOCIAL LOGIN</h3>
+				<p th:each="url : ${urls}">
+					<a th:href="${url.value}"><img src="/static/img/btn_google_signin.png" width="30%;"/>  </a>
+				</p>
             </div>
         </div>
     </div>

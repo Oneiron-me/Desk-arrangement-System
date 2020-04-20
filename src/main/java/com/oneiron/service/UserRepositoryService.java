@@ -30,4 +30,11 @@ public interface UserRepositoryService{
 	 */
 	public UserDoc findUserByIdN1ql(String id);
 	
+	/**
+	 * 
+	 * @param id
+	 * @return 구글로그인 정보는 따로 쿼리짜서가져옴...
+	 */
+	public UserDoc findGoogleUserByIdN1ql(String id);
+	
 }

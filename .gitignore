@@ -26,3 +26,5 @@ hs_err_pid*
 /bin/
 /.settings/
 /.classpath
+/pruna.csr
+/pruna.jks

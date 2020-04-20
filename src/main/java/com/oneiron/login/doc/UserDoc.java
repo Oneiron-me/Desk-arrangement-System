@@ -2,6 +2,7 @@ package com.oneiron.login.doc;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,14 +28,27 @@ public class UserDoc implements UserDetails{
 	private static final long serialVersionUID = -4557490710114025505L;
 
 	@Id
-	String id;
+	String id; // id
 	
 	String uid;
 	
-	String name;
+	String name; // name
 	
-	String password;
-	String role;
+	String password; // pw
+	String role;	// spring role
+	
+	String useAt; // 사용 여부
+	List<String> deskList; // deskList
+	
+	// google login info 
+	
+	String joinKinds; // google join
+	
+	Map<String ,Object> attributes; // google login attributes;	
+	String picture; // user picture
+	String locale; // locale
+	String docType; // documentType
+	
 	
 	private List<GrantedAuthority> authorities;
 	private boolean accountNonExpired = true;

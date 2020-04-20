@@ -20,6 +20,7 @@ import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oneiron.common.service.CommonService;
 import com.oneiron.login.doc.UserDoc;
 import com.oneiron.service.UserRepositoryService;
 import com.oneiron.util.Util;
@@ -32,6 +33,9 @@ public class UserRepositoryServiceImpl implements UserRepositoryService{
 	@Autowired
 	@Qualifier(BeanNames.COUCHBASE_TEMPLATE)
 	private CouchbaseTemplate defaultTemplate;
+	
+	@Autowired
+	CommonService commonServiceImpl;
 	
 	@Override
 	public int save(UserDoc entity) {
@@ -126,16 +130,42 @@ public class UserRepositoryServiceImpl implements UserRepositoryService{
 		StringBuffer query = new StringBuffer();
 
 		query.append("select META().id, a.name, a.`password`, a.`role` from `oneiron` a where META().id = $id limit 1");
-
-		JsonObject placeholderValues = JsonObject.fromJson(paramStr);
-		N1qlParams params = N1qlParams.build().pretty(false);
-
-		ParameterizedN1qlQuery paramQuery = N1qlQuery.parameterized(query.toString(), placeholderValues, params);
 		
-		List<UserDoc> list = defaultTemplate.findByN1QLProjection(paramQuery, UserDoc.class);
-		if(list.size() > 0) {
-			result = list.get(0);
+		List<Map<String, Object>> list = commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
+		ObjectMapper mapper= new ObjectMapper();
+		
+		if(list.size() > 0)
+			result = mapper.convertValue(list.get(0), UserDoc.class);
+		
+		return result;
+	}
+
+	@Override
+	public UserDoc findGoogleUserByIdN1ql(String id) {
+		UserDoc result = null;
+		
+		Util util = new Util();
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		
+		paramMap.put("id", id);
+		
+		String paramStr = null;
+		try {
+			paramStr = util.serializeObject(paramMap);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
 		}
+		
+		StringBuffer query = new StringBuffer();
+
+		query.append("select a.id, a.name, a.`role`, a.picture, a.locale from `oneiron` a where META().id = $id limit 1");
+		
+		List<Map<String, Object>> list = commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
+		ObjectMapper mapper= new ObjectMapper();
+		
+		if(list.size() > 0)
+			result = mapper.convertValue(list.get(0), UserDoc.class);
 		
 		return result;
 	}
