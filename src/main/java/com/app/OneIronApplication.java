@@ -1,7 +1,7 @@
 package com.app;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -10,8 +10,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @ComponentScan("com.oneiron")
 public class OneIronApplication {
 
+	private static final String application = "spring.config.location=classpath:/application.properties"
+			+ ", classpath:/security.properties";
+	
 	public static void main(String[] args) {
-		SpringApplication.run(OneIronApplication.class, args);
+		new SpringApplicationBuilder(OneIronApplication.class)
+			.properties(application)
+			.run(args);
 	}
 	
 }

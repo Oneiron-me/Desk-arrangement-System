@@ -42,6 +42,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport{
 		 * .resourceChain(true) .addResolver(new PathResourceResolver());
 		 */
 		
+		registry.addResourceHandler("/.well-known/**").addResourceLocations("classpath:/.well-known/");
 		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}

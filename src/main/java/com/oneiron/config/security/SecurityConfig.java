@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/admin/home").access("hasAuthority('ADMIN')");
 		
 		http.authorizeRequests()
-			.antMatchers("/", "/test","/login", "/callback", "/error", "/webjars/**", "/static/**").permitAll()
+			.antMatchers("/", "/test","/login", "/.well-known/**", "/callback", "/error", "/webjars/**", "/static/**").permitAll()
 			.anyRequest().authenticated();
         
 		// 웹소켓은 csrf 뗐다!!!
