@@ -36,21 +36,45 @@ public class CustomOAuth2AuthenticationSuccessHandler extends SimpleUrlAuthentic
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
+		
 		if (response.isCommitted()) {
 			return;
 		}
+		
 		DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
 		Map<String, Object> attributes = oidcUser.getAttributes();
 		String email = attributes.get("email").toString();
+		String name = attributes.get("name").toString();
+		String picture = attributes.get("picture").toString();
+		String locale = attributes.get("locale").toString();
 		
 		logger.info("google login success handler {}", oidcUser);
 		
-		UserDoc doc = userRepositoryServiceImpl.findGoogleUserByIdN1ql(email);
+		UserDoc userInfo = userRepositoryServiceImpl.findGoogleUserByIdN1ql(email);
 		
-		if(doc != null) { 
+		logger.info("석세스핸들러 안 {}", userInfo);
+		
+		UserDoc doc = new UserDoc();
+		
+		if(userInfo == null) {
+			doc.setId(attributes.get("email").toString());
+			doc.setName(name);
+			doc.setRole("MEMBER");
+			doc.setJoinKinds("google");
+			doc.setPicture(picture);
+			doc.setLocale(locale);
+			doc.setDocType("user");
+			doc.setDeskList(new ArrayList<String>());
+			logger.info("new google User account {}", doc);
+			userRepositoryServiceImpl.save(doc);
+			
+			userInfo = doc;
+		}
+		
+		if(userInfo != null) { 
 			List<GrantedAuthority> authorities = new ArrayList<>();
-			authorities.add(new SimpleGrantedAuthority(doc.getRole()));
-			doc.setAuthorities(authorities); 
+			authorities.add(new SimpleGrantedAuthority(userInfo.getRole()));
+			userInfo.setAuthorities(authorities); 
 		}
 		
 		//세션이상하면 걍 박살냄
@@ -58,7 +82,7 @@ public class CustomOAuth2AuthenticationSuccessHandler extends SimpleUrlAuthentic
 		
 		HttpSession session = request.getSession(true);
 		
-		session.setAttribute("userInfo", doc);
+		session.setAttribute("userInfo", userInfo);
 		
 		getRedirectStrategy().sendRedirect(request, response, "/intro/home");
 	}

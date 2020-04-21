@@ -101,6 +101,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.permitAll()
             	.userInfoEndpoint()
             	.oidcUserService(customOidcUserService)
+            	.and()
+            	.authorizationEndpoint()
+            	.authorizationRequestRepository(authorizationRequestRepository())
             .and()
 			.and() //로그인 관련
 				.formLogin()

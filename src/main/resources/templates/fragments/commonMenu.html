@@ -27,7 +27,9 @@
 				</ul>
 				<span style="margin-right:30px; color:white;" th:text="|현재 로그인 :  ${session.userInfo.name}|"></span>
 				<a class="logout" id="btnLogout">LOG OUT</a>
-				<div th:if="${session.userInfo.id.equals('properties@kakao.com')}">
+				<!-- 걍 보여줌 -->
+				<div th:if="${session.userInfo.id.equals('properties@kakao.com')}"></div>
+				<div>
 					<form class="form-inline my-2 my-lg-0">
 						<button class="btn btn-danger my-2 my-sm-0" style="margin-left:20px;" type="button" id="btnAdmin">ADMIN</button>
 					</form>
