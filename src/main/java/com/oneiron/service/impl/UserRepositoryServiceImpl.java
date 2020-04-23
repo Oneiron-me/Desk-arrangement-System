@@ -129,7 +129,7 @@ public class UserRepositoryServiceImpl implements UserRepositoryService{
 		
 		StringBuffer query = new StringBuffer();
 
-		query.append("select META().id, a.name, a.`password`, a.`role` from `oneiron` a where META().id = $id limit 1");
+		query.append("select META().id, a.name, a.`password`, a.`role`, a.joinKinds from `oneiron` a where META().id = $id limit 1");
 		
 		List<Map<String, Object>> list = commonServiceImpl.findByN1qlProjection(query.toString(), paramStr);
 		ObjectMapper mapper= new ObjectMapper();

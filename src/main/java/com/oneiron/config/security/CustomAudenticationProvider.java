@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.oneiron.login.doc.UserDoc;
 import com.oneiron.util.Util;
 
 @Component
@@ -32,6 +33,7 @@ public class CustomAudenticationProvider implements AuthenticationProvider {
 		String loginId = authentication.getName();
 		String password = (String) authentication.getCredentials();
 		UserDetails user = null;
+		UserDoc doc = null;
 		Collection<? extends GrantedAuthority> authorities = null;
 		String message = null;
 		
@@ -40,12 +42,12 @@ public class CustomAudenticationProvider implements AuthenticationProvider {
 		SCryptPasswordEncoder encoder = util.sCryptPasswordEncoder(65536, 64, 1, 32, 64);
 		
 		try {
-			user = userDetailsService.loadUserByUsername(loginId);
+			doc = (UserDoc)userDetailsService.loadUserByUsername(loginId);
 
 			//1q2w3e4r
 			//$104001$ikuih+xjEtmtbOIXvB7p+QrTgnmtCJiTN17VNdukdSHVEueuWEu7ZQPrHRds8TeH+fKavAOLYjZBXQWmEjsQ+A==$nVremxOAzJlNqM96AqgGFE+B8tom2ynah+UdRcmTh9Y=
 			
-			if(user == null){
+			if(doc == null){
 				message = "로그인 정보가 없습니다.";
 
 				throw new AccountStatusException(message) {
@@ -53,7 +55,15 @@ public class CustomAudenticationProvider implements AuthenticationProvider {
 				};
 			}
 			
-			if(!encoder.matches(password, user.getPassword())) {
+			if(doc.getJoinKinds() != null && !doc.getJoinKinds().equals("web")){
+				message = "소셜 로그인을 이용해주세요.";
+
+				throw new AccountStatusException(message) {
+					private static final long serialVersionUID = -868660158678789528L;
+				};
+			}
+			
+			if(!encoder.matches(password, doc.getPassword())) {
 				message = "비번이 틀렸읍니다.";
 
 				throw new AccountStatusException(message) {
@@ -61,7 +71,9 @@ public class CustomAudenticationProvider implements AuthenticationProvider {
 				};
 			}
 			
-			logger.info("user 정보 : {}", user);
+			logger.info("user 정보 : {}", doc);
+			
+			user = doc;
 			
 			authorities = user.getAuthorities();
 			
