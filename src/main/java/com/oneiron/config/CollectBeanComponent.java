@@ -2,6 +2,9 @@ package com.oneiron.config;
 
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.coyote.http2.Http2Protocol;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -33,6 +36,14 @@ public class CollectBeanComponent {
 	@Bean
 	GrantedAuthorityDefaults grantedAuthorityDefaults() {
 	    return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+	}
+	
+	//http2 적용
+	@Bean
+	public ConfigurableServletWebServerFactory configurableServletWebServerFactory() {
+	    TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+	    factory.addConnectorCustomizers(connector -> connector.addUpgradeProtocol(new Http2Protocol()));
+	    return factory;
 	}
 	
 	@Bean

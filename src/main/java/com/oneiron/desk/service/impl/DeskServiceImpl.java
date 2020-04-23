@@ -16,6 +16,8 @@ import org.springframework.data.couchbase.config.BeanNames;
 import org.springframework.data.couchbase.core.CouchbaseTemplate;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
 
 import com.couchbase.client.java.Bucket;
@@ -57,17 +59,28 @@ public class DeskServiceImpl implements DeskService{
 //		logger.info("맵 넘어왔냐 : {} ", map);
 		
 		Principal parkSipal = accessor.getUser();
-		UserDoc user = (UserDoc)((Authentication) parkSipal).getPrincipal();
 		
-//		logger.info("프린시팔 박시팔 : {}", parkSipal );
 		
-//		for(String header : accessor.getMessageHeaders().keySet()) {
-//			logger.info("test22 : {}", header);
-//		}
+		//프린시팔 별로 username, id 가져오는게 달라져서 분기함
+		String userId = null;
+		String userName = null;
+		
+		Object user = ((Authentication) parkSipal).getPrincipal();
+		
+		if(user instanceof DefaultOidcUser) {
+			DefaultOidcUser oidcUser = (DefaultOidcUser)user;
+			userId = oidcUser.getEmail();
+			userName = oidcUser.getFullName();
+			
+		} else if(user instanceof UserDoc) {
+			UserDoc doc = (UserDoc)((Authentication) parkSipal).getPrincipal();
+			userId = doc.getId();
+			userName = doc.getUsername();
+		}
 		
 		//파라미터 만듬
-		map.put("userId", user.getId());
-		map.put("userName", user.getName());
+		map.put("userId", userId);
+		map.put("userName", userName);
 		map.put("deskId", deskMap.get("deskId"));
 		map.put("noteId", utilMap.get("uuid"));
 		map.put("createTime", utilMap.get("time"));
