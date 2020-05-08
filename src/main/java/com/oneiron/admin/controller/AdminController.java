@@ -1,5 +1,6 @@
 package com.oneiron.admin.controller;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.oneiron.admin.doc.AdminVo;
 import com.oneiron.admin.service.AdminService;
 
 @Controller
@@ -34,6 +36,24 @@ public class AdminController {
 	@RequestMapping("/getAdminInfo")
 	public @ResponseBody Map<String, Object> getAdminInfo() {
 		return adminServiceImpl.getAdminInfoByN1ql();
+	}
+	
+	/**
+	 * 
+	 * @return MYBATIS 연동했음... 근데 잘안쓸거같다
+	 * @throws SQLException
+	 */
+	@RequestMapping("/getAdminInfoTest")
+	public @ResponseBody AdminVo getAdminInfoTest() throws SQLException {
+//		String connectionString = "jdbc:couchbase:User='oneiron';Password='1q2w3e4r';Server='http://hancheol.dlinkddns.com';N1QLPort=8093;";
+//		 
+//		Connection conn = DriverManager.getConnection(connectionString);
+//		DatabaseMetaData table_meta = conn.getMetaData();
+//		ResultSet rs = table_meta.getColumns(null, null, "oneiron", null);
+//		while(rs.next()){
+//		  System.out.println("바보"+ rs.getString("COLUMN_NAME"));
+//		}
+		return adminServiceImpl.getAdminInfoTest();
 	}
 	
 	/**

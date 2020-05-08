@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oneiron.admin.dao.AdminDao">
+	<select id="getAdminInfo" parameterType="hashMap" resultType="com.oneiron.admin.doc.AdminVo">
+		
+			select a.info, a.projects
+			from oneiron a where [Document.Id] = #{id}
+<!-- 		SELECT ColumnName, DataTypeName FROM sys_tablecolumns WHERE TableName='oneiron' -->
+	</select>
+</mapper>

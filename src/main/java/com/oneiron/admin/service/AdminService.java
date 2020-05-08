@@ -2,12 +2,16 @@ package com.oneiron.admin.service;
 
 import java.util.Map;
 
+import com.oneiron.admin.doc.AdminVo;
+
 public interface AdminService {
 
 	/**
 	 * @return ADMIN INFO 가져옵니다.
 	 */
 	public Map<String, Object> getAdminInfoByN1ql();
+	
+	public AdminVo getAdminInfoTest();
 	
 	/**
 	 * 

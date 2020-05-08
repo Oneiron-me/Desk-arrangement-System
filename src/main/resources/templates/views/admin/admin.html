@@ -96,7 +96,13 @@
 	    
 	    	window.onload = function(){
 	    		//걍 폼로드하자마자 데이터 싹 가져옴
-	    		ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
+	    		
+	    		
+	    		ajaxJsonParam('/admin/getAdminInfoTest', null).then(function(data){
+	    			console.log(data);
+	    		});
+	    		
+	    		/* ajaxJsonParam('/admin/getAdminInfo', null).then(function(data){
 					if(!!data){
 						//개인정보 세팅
 						var info = data["info"];
@@ -121,7 +127,7 @@
 					}
 					
 					elementsEvent();
-				});
+				}); */
 	    	};
 	    	
 	    	//각종 엘리먼트들 이벤트들 모아둠

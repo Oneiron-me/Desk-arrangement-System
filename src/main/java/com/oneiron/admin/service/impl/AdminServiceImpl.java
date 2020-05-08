@@ -3,6 +3,7 @@ package com.oneiron.admin.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -15,10 +16,16 @@ import org.springframework.data.couchbase.core.CouchbaseTemplate;
 import org.springframework.stereotype.Service;
 
 import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.document.JsonDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.oneiron.admin.dao.AdminDao;
+import com.oneiron.admin.doc.AdminDoc;
+import com.oneiron.admin.doc.AdminVo;
 import com.oneiron.admin.service.AdminService;
 import com.oneiron.common.service.CommonService;
+import com.oneiron.repo.Repository;
 import com.oneiron.util.CommonFunction;
+import com.oneiron.util.SuperHashMap;
 import com.oneiron.util.Util;
 
 @Service
@@ -35,6 +42,12 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	CommonService commonServiceImpl;
+	
+	@Autowired
+	AdminDao adminDao;
+	
+	@Autowired
+	Repository repository;
 	
 	@Override
 	public Map<String, Object> getAdminInfoByN1ql() {
@@ -84,6 +97,22 @@ public class AdminServiceImpl implements AdminService {
 		map.put("lastChange", commonFunction.today());
 		return bucket.mapAdd(userId, "projects", map);
 		
+	}
+
+	@Override
+	public AdminVo getAdminInfoTest() {
+		String userId = "properties@kakao.com";
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("id", userId);
+		
+		AdminDoc d = new AdminDoc();
+		d.setId(userId);
+		
+		Stream<AdminDoc> dd = repository.findAllByCustomQueryAndStream(userId);
+		
+		dd.forEach(test -> logger.info("제발 {}", test));
+		
+		return null;// adminDao.getAdminInfo(paramMap);
 	}
 
 }
